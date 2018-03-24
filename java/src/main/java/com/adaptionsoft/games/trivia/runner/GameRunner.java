@@ -1,38 +1,45 @@
-
 package com.adaptionsoft.games.trivia.runner;
-import java.util.Random;
 
-import com.adaptionsoft.games.uglytrivia.Game;
+import com.adaptionsoft.games.uglytrivia.*;
 
+import java.util.Arrays;
+import java.util.List;
 
 public class GameRunner {
+    private final IPrinter printer;
+    private final IRandom random;
+    private final ITimer timer;
+    private final GameState gameState;
+    private final List<String> players;
 
-	private static boolean notAWinner;
+    public GameRunner(IPrinter printer, IRandom random, ITimer timer, GameState gameState, List<String> players) {
+        this.printer = printer;
+        this.random = random;
+        this.timer = timer;
+        this.gameState = gameState;
+        this.players = players;
+    }
 
-	public static void main(String[] args) {
-		long seed = Long.valueOf(args[0]);
+    public void run() {
+        boolean shouldContinue;
 
-		Game aGame = new Game();
-		
-		aGame.add("Chet");
-		aGame.add("Pat");
-		aGame.add("Sue");
-		
-		Random rand = new Random(seed);
-	
-		do {
-			
-			aGame.roll(rand.nextInt(5) + 1);
-			
-			if (rand.nextInt(9) == 7) {
-				notAWinner = aGame.wrongAnswer();
-			} else {
-				notAWinner = aGame.wasCorrectlyAnswered();
-			}
-			
-			
-			
-		} while (notAWinner);
-		
-	}
+        Game aGame = new Game(printer, gameState);
+
+        players.forEach(aGame::add);
+
+
+        do {
+
+            aGame.roll(random.nextInt(5) + 1);
+
+            if (random.nextInt(9) == 7) {
+                shouldContinue = aGame.wrongAnswer();
+            } else {
+                shouldContinue = aGame.wasCorrectlyAnswered();
+            }
+
+
+
+        } while (shouldContinue && timer.getElapsedMinutes() < 30);
+    }
 }
