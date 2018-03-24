@@ -4,6 +4,7 @@ import com.adaptionsoft.games.trivia.runner.GameRunner;
 import com.adaptionsoft.games.uglytrivia.DefaultRandom;
 import com.adaptionsoft.games.uglytrivia.GameState;
 import com.adaptionsoft.games.uglytrivia.IPrinter;
+import com.adaptionsoft.games.uglytrivia.InfiniteTimer;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 
@@ -29,9 +30,9 @@ class FixtureTest {
 		int i = repetitionInfo.getCurrentRepetition();
 
 		IPrinter mockPrinter = new SystemOutPrinterMock();
-		List<String> players = Arrays.asList("Chat", "Pet", "Sue");
+		List<String> players = Arrays.asList("Chet", "Pat", "Sue");
 		GameState gameState = new GameState(players);
-		new GameRunner(mockPrinter, new DefaultRandom(i), timer, gameState).run();
+		new GameRunner(mockPrinter, new DefaultRandom(i), new InfiniteTimer(), gameState, players).run();
 		String fixture = readFixture(i);
 
 		assertEquals("Fixture index: " + i, fixture, mockPrinter.toString());
